@@ -136,6 +136,7 @@ export function chartData(
 
 function spreadsheetSafe(value: string): string {
   // CSV quoting does not stop spreadsheet formula execution.
+  // eslint-disable-next-line no-control-regex -- leading control characters can hide a formula
   if (/^[\s\u0000-\u001f]*[=+@-]/.test(value) && numericValue(value) === null) return `'${value}`;
   if (/^[\t\r]/.test(value)) return `'${value}`;
   return value;
@@ -149,5 +150,6 @@ export function exportCsv(columns: Column[], rows: string[][]): string {
 }
 
 export function exportFilename(filename: string): string {
+  // eslint-disable-next-line no-control-regex -- control characters are invalid in file names
   return `${filename.replace(/\.csv$/i, '').replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_') || 'data'}-filtered.csv`;
 }
