@@ -19,18 +19,19 @@ CSV Lens is a local-first, browser-only CSV workspace. This roadmap takes it fro
 ## Phase 1: Deployable
 
 - [x] Production CSP without the dev-only `ws://127.0.0.1` allowance
-- [x] Security and cache headers for static hosts (`public/_headers`, Netlify and Cloudflare Pages format)
+- [x] Security and cache headers for static hosts (`public/_headers`, Cloudflare Pages format)
 - [x] `robots.txt`, Open Graph and Twitter meta tags, static 404 page
-- [ ] Choose a host and connect the repo (Cloudflare Pages or Netlify), custom domain, HTTPS
+- [x] Host chosen: Cloudflare Pages (`wrangler.toml`, `.nvmrc`, deploy steps in README)
+- [ ] Connect the repo in the Cloudflare dashboard, custom domain
 - [ ] Social preview image (1200x630) and `og:image`
-- [ ] Choose a license
+- [x] License: MIT
 
 ## Phase 2: CI and code quality
 
 - [x] GitHub Actions: lint, type check, unit tests, build, browser tests on every push and PR
 - [x] ESLint (TypeScript and React Hooks rules)
 - [x] Dependabot for npm and GitHub Actions
-- [ ] Deploy previews per PR (host integration)
+- [ ] Deploy previews per PR (automatic once Cloudflare Pages is connected)
 - [ ] Browser tests in Firefox and WebKit
 - [ ] Bundle size budget enforced in CI
 
