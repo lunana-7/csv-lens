@@ -22,6 +22,10 @@ npm run preview
 
 `dist/` is a static site and can be served by any static web server. Vite binds to loopback only by default.
 
+`public/_headers` sets security and cache headers on Cloudflare Pages. On other hosts, configure the same headers on the server. The production build drops the dev-only WebSocket allowance from the Content Security Policy.
+
+See [ROADMAP.md](ROADMAP.md) for planned work.
+
 ## Features
 
 - CSV file picker and drag-and-drop, with a built-in fictional sales dataset.
@@ -57,9 +61,13 @@ npm run preview
 ## Tests
 
 ```sh
+npm run lint
+npm run typecheck
 npm test
 npm run test:e2e
 ```
+
+GitHub Actions runs all four on every push to `main` and on every pull request.
 
 Unit tests cover parsing, row limits, filters, sorting, chart calculations, quoting, and spreadsheet-safe export.
 
@@ -70,3 +78,25 @@ Browser screenshots are saved under `artifacts/`; failure traces and screenshots
 ## Stack
 
 React, TypeScript, Vite, Papa Parse, Recharts, Lucide icons, and plain CSS. Vitest and Playwright provide regression tests.
+
+## Deploy (Cloudflare Pages)
+
+The site deploys as static files to Cloudflare Pages. `public/_headers` sets the security and cache headers, and Pages serves `404.html` for unknown paths.
+
+One-time setup in the Cloudflare dashboard:
+
+1. Go to **Workers & Pages → Create → Pages → Connect to Git** and pick this repository.
+2. Build command: `npm run build`. Output directory: `dist`. Node version comes from `.nvmrc`.
+3. Set the production branch to `main`. Every PR then gets a preview URL automatically.
+4. Optional: add a custom domain under **Custom domains**. HTTPS is automatic.
+
+Manual deploy from a machine logged in with `npx wrangler login`:
+
+```sh
+npm run build
+npx wrangler pages deploy
+```
+
+## License
+
+[MIT](LICENSE)

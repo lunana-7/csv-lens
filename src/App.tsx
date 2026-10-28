@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowDown, ArrowDownToLine, ArrowRight, ArrowUp, ArrowUpDown, BarChart3, Check,
   ChevronLeft, ChevronRight, CircleHelp, Columns3, Database, FileSpreadsheet,
@@ -42,7 +42,10 @@ export default function App() {
   const nextFilterId = useRef(0);
 
   useEffect(() => () => { workerRef.current?.terminate(); }, []);
-  const selected = useMemo(() => dataset ? selectRows(dataset, query, filters, sort) : [], [dataset, query, filters, sort]);
+  // Filtering 50,000 rows on every keystroke blocks input; let React render typing first.
+  const deferredQuery = useDeferredValue(query);
+  const deferredFilters = useDeferredValue(filters);
+  const selected = useMemo(() => dataset ? selectRows(dataset, deferredQuery, deferredFilters, sort) : [], [dataset, deferredQuery, deferredFilters, sort]);
   const totalPages = Math.max(1, Math.ceil(selected.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages - 1);
   const visibleRows = selected.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
